@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0,minimum-scale=1, maximum-scale=1" />
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+
+        body, html {
+            -webkit-user-select: none;
+            user-select: none
+        }
+
+        html {
+            -webkit-text-size-adjust: 100%
+        }
+
+        body {
+            line-height: 1.6;
+            background-color: #f5f5f9;
+            color: #4a4a4a;
+            font-size: 14px;
+            font-family: Arial, '微软雅黑', Helvetica Neue, Helvetica, sans-serif;
+            -webkit-overflow-scrolling: touch;
+            overflow-scrolling: touch
+        }
+
+        * {
+            margin: 0;
+            padding: 0
+        }
+
+        .tab{
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: space-around;
+            align-items: center;
+            height: 40px;
+            background-color: #fff;
+        }
+        .tab .tab_item{
+            flex: auto;
+            background-color: #fff;
+            line-height: 40px;
+            text-align: center;
+            font-size: 14px;
+        }
+        .tab_line_box{
+            height: 2px;
+            position: relative;
+        }
+        .tab_line_box .tab_line{
+            width: 33%;
+            height: 100%;
+            background-color: red;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        .current{
+            color: red;
+        }
+        
+    </style>
+</head>
+<body>
+<div class="tab" id="tab">
+    <div class="tab_item current">全部</div>
+    <div class="tab_item">待付款</div>
+    <div class="tab_item">待收货</div>
+</div>
+<div class="tab_line_box">
+    <div class="tab_line" id="tab_line"></div>
+</div>
+
+<script>
+    //匀速动画
+    function animate(element, target) {
+        clearInterval(element.timeId);
+        element.timeId = setInterval(function () {
+            var current = element.offsetLeft;
+            var step = 10;
+            step = target > current?step:-step;
+            current += step;
+            if(Math.abs(current - target) > Math.abs(step)){
+                element.style.left = current + 'px';
+            }else{
+                clearInterval(element.timeId);
+                element.style.left = target + 'px';
+            }
+        },20);
+    }
+    //不匀速动画
+    // function animate(element, target) {
+    //     console.log(element, target);
+    //     // 清理定时器
+    //     clearInterval(element.timeId);
+    //     element.timeId = setInterval(function () {
+    //         //获取元素的当前位置
+    //         var current = element.offsetLeft;
+    //         //移动的步数
+    //         var step = (target - current) / 10;
+    //         step = step > 0 ? Math.ceil(step) : Math.floor(step);
+    //         current += step;
+    //         element.style.left = current + "px";
+    //         if (current === target) {
+    //             //清理定时器
+    //             clearInterval(element.timeId);
+    //         }
+    //     }, 20);
+    // }
+
+    var line = document.getElementById('tab_line');
+    var list = document.getElementById('tab').children;
+
+    for (var i = 0; i < list.length; i++) {
+        list[i].onclick = changeTab;
+        list[i].setAttribute('index',i);
+    }
+
+    function changeTab() {
+        for(var i= 0;i < list.length;i++){
+            list[i].className = 'tab_item';
+        }
+        list[this.getAttribute('index')].className = 'tab_item current';
+        animate(line, this.offsetLeft);
+    }
+
+
+
+
+</script>
+</body>
+</html>
